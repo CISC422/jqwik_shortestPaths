@@ -2,13 +2,11 @@
  * Representation of paths
  */
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class Path {
-    public List<Integer> path = null;
-    public int length = -1;
+    public List<Integer> path;
+    public int length;
 
     public Path(List<Integer> p, int len) {
         this.path = p;

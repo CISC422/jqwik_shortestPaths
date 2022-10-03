@@ -13,9 +13,9 @@ public class GraphTestExamples {
                 {2,-1,0}
         };
         Graph graph = new Graph(adjM);
-        System.out.println(graph.toString());
+        System.out.println("Input graph is: \n" + graph);
         graph.pathM = graph.computeShortestPaths();
-        System.out.println(graph.toString());
+        System.out.println("After computation of shortest paths: \n" + graph);
     }
     @Example
     void exTest2() {
@@ -28,9 +28,9 @@ public class GraphTestExamples {
                 {-1, -1, -1, -1, 5, 0}    // f
         };
         Graph graph = new Graph(adjM);
-        System.out.println(graph.toString());
+        System.out.println("Initial graph is: \n" + graph);
         graph.pathM = graph.computeShortestPaths();
-        System.out.println(graph.toString());
+        System.out.println("After computation of shortest paths: \n" + graph);
     }
 
     @Example
@@ -44,12 +44,12 @@ public class GraphTestExamples {
                 {-1, -1, -1, -1, 5, 0}    // f
         };
         Graph graph = new Graph(adjM);
-        System.out.println(graph.toString());
+        System.out.println("Input graph is: \n" + graph);
         graph.pathM = graph.computeShortestPaths();
-        System.out.println(graph.toString());
-        System.out.println(Arrays.toString(graph.reachableFrom(0)));
-        System.out.println(Arrays.toString(graph.reachableFrom(1)));
-        System.out.println(graph.shortestPath(0, 4));
+        System.out.println("After computation of shortest paths: " + graph);
+        System.out.println("Nodes reachable from node 0: " + Arrays.toString(graph.reachableFrom(0)));
+        System.out.println("Nodes reachable from node 1: " + Arrays.toString(graph.reachableFrom(1)));
+        System.out.println("Shortest path from node 0 to node 4: " + graph.shortestPath(0, 4));
     }
 
     @Example
@@ -63,9 +63,9 @@ public class GraphTestExamples {
                 {-1, -1, -1, -1, 5, 0}    // f
         };
         Graph graph = new Graph(adjM);
-        System.out.println(graph.toString());
+        System.out.println(graph);
         graph.pathM = graph.computeShortestPaths();
-        System.out.println(graph.toString());
+        System.out.println(graph);
         Path p0 = graph.shortestPath(0, 4);
         System.out.println("shortest path from 0 to 4 is: " + p0);
         graph.updateEdge(0, 1, graph.adjM[0][1]+1);

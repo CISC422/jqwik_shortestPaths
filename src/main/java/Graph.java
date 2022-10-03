@@ -8,11 +8,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
 
-
 public class Graph {
-    public Integer[][] adjM = null;
-    public int dim = 0;
-    public Path[][] pathM = null;
+    public Integer[][] adjM;
+    public int dim;
+    public Path[][] pathM;
 
     public Graph(Integer[][] adjM) {
         this.adjM = adjM;

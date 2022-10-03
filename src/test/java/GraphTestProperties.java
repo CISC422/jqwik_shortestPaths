@@ -21,17 +21,16 @@ public class GraphTestProperties {
                 adjM2[i][j] = d1.adjM[i][j];
                 pathM2[i][j] = d1.pathM[i][j];
             }
-        Graph d2 = new Graph(adjM2, pathM2, dim);
-        return d2;
+        return new Graph(adjM2, pathM2, dim);
     }
 
 
 // PROPERTIES ========================================================
 
-    // a. if there is no path from i to j in graph, then after increasing the weight of an edge in graph
-    // there will still not be a path (P1)
-    // b. if there is a path w/ length l from i to j in graph, then after increasing the weight of
-    // an edge in graph by w, the length of the shortest path will be between l and l+w (P2)
+    // a. if there is no path from k to l in the graph, then after increasing the weight of an existing edge (i,j)
+    // in the graph there will still not be a path from k to l (P1 in notes)
+    // b. if there is a path w/ length len from l to k in graph, then after increasing the weight of an existing edge (i,j)
+    // in the graph by w, the length of the shortest path from l to k will be between l and l+w (P2)
     @Property
     @Report(Reporting.GENERATED)
     public void propUpdateEdgesAndLengthsOfShortestPaths1(@ForAll("adjMatrices") Integer[][] adjM,
@@ -39,7 +38,7 @@ public class GraphTestProperties {
                                                           @ForAll @IntRange(min = 1, max = 2) Integer w) {
         int i = t.get1();
         int j = t.get2();
-        Assume.that(adjM[i][j] != -1);
+        Assume.that(adjM[i][j] != -1);   // edge (i,j) must exist!
         Graph graph = new Graph(adjM);
         graph.computeShortestPaths();
         Graph graph0 = clone(graph);
@@ -63,11 +62,11 @@ public class GraphTestProperties {
                                                               @ForAll @IntRange(min = 1, max = 2) Integer w) {
         int i = t.get1();
         int j = t.get2();
-        Assume.that(adjM[i][j] == -1);
+        Assume.that(adjM[i][j] == -1);  // graph does not contain edge (i,j) yet
         Graph graph = new Graph(adjM);
         graph.computeShortestPaths();
         Graph graph0 = clone(graph);
-        graph.updateEdge(i, j, w);
+        graph.updateEdge(i, j, w);   // add edge
         int dim = graph.dim;
         for (int k = 0; k < dim; k++)
             for (int l = 0; l < dim; l++)
@@ -79,7 +78,7 @@ public class GraphTestProperties {
     @Report(Reporting.GENERATED)
     public void propReverseEdgesIsIdempotent(@ForAll("adjMatrices") Integer[][] adjM) {
         Graph graph = new Graph(adjM);
-        System.out.println(graph.toString());
+        System.out.println(graph);
         graph.computeShortestPaths();
         String graph0Str = graph.toString();
         System.out.println(graph0Str);
@@ -112,7 +111,7 @@ public class GraphTestProperties {
     @Report(Reporting.GENERATED)
     public void propComputeShortestPathsIsIdempotent(@ForAll("adjMatrices") Integer[][] adjM) {
         Graph graph = new Graph(adjM);
-        System.out.println(graph.toString());
+        System.out.println(graph);
         graph.computeShortestPaths();
         String graph0Str = graph.toString();
         System.out.println(graph0Str);
@@ -127,8 +126,8 @@ public class GraphTestProperties {
     @Property
     @Report(Reporting.GENERATED)
     public void propertyUpdateEdgesAndReachability(@ForAll("adjMatrices") Integer[][] adjM,
-                                                  @ForAll("nodePairs") Tuple2<Integer,Integer> t,
-                                                  @ForAll @IntRange(min = 1, max = 2) Integer w) {
+                                                   @ForAll("nodePairs") Tuple2<Integer,Integer> t,
+                                                   @ForAll @IntRange(min = 1, max = 2) Integer w) {
         Graph graph = new Graph(adjM);
         graph.computeShortestPaths();
         int i = t.get1();
@@ -185,9 +184,10 @@ public class GraphTestProperties {
     @Provide
     public static Arbitrary<Integer[][]> adjMatrices() {
         final int MinNumNodes = 10;
-        final int MaxNumNodes = 10;
-        //       final int NumNodes = 5;
-        Arbitrary<Integer> weightArb = Arbitraries.of(-1, 1, 2, 3);
+        final int MaxNumNodes = MinNumNodes;
+        Arbitrary<Integer> weightArb = Arbitraries.of(-1, 1, 2, 3);  // all choices equally likely
+        // Arbitrary<Integer> weightArb = Arbitraries.of(-1, 1, 1, 2, 2, 3, 3);  // -1 less likely than other weights
+        // Arbitrary<Integer> weightArb = Arbitraries.of(-1, -1, -1, 1, 2, 3);  // -1 more likely than other weights
         Arbitrary<Integer[]> intArrayArb = weightArb.array(Integer[].class).ofMinSize(MinNumNodes).ofMaxSize(MaxNumNodes);
         Arbitrary<Integer[][]> intMatrixArb =
                 intArrayArb.array(Integer[][].class)
